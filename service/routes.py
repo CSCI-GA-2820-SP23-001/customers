@@ -32,7 +32,7 @@ def create_customers():
     customer.deserialize(request.get_json())
     customer.create()
     message = customer.serialize()
-    location_url = url_for("create_customers", customer_id=customer.id, _external=True)
+    location_url = url_for("get_customers", customer_id=customer.id, _external=True)
 
     app.logger.info("Customer with ID [%s] created.", customer.id)
     return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
