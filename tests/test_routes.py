@@ -11,7 +11,7 @@ from unittest import TestCase
 from unittest.mock import MagicMock, patch
 from service import app
 from service.models import db, init_db, Customer
-from service.common import status  # HTTP Status Codes
+from service.common import constants, status, strings
 from tests.factories import CustomerFactory
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
@@ -65,9 +65,24 @@ class TestCustomerServer(TestCase):
         return customers
     
     ######################################################################
-    #  P L A C E   T E S T   C A S E S   H E R E
+    #  C U S T O M E R   H A P P Y   P A T H  T E S T   C A S E S
     ######################################################################
     
+    def test_root_url(self):
+        """It should get the root URL message"""
+
+        response = self.client.get("/")
+        
+        # assert the response has the correct status code
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        data = response.get_json()
+
+        # assert the root URL message has the correct name
+        self.assertEqual(data['name'], strings.ROOT_URL_NAME)
+        # assert the version matches the value stored in contstants
+        self.assertEqual(data['version'], constants.ROUTES_VERSION)
+
     def test_create_customer(self):
         """It should Create a new Customer"""
 

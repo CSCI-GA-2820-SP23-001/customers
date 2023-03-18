@@ -11,7 +11,7 @@ DELETE /customers/{id} - deletes a Customer record in the database
 """
 
 from flask import Flask, jsonify, request, url_for, make_response, abort
-from service.common import status  # HTTP Status Codes
+from service.common import constants, status, strings
 from service.models import Customer
 
 # Import Flask application
@@ -26,9 +26,9 @@ def index():
     app.logger.info("Request for Root URL")
     return (
         jsonify(
-            name="Customer REST API Service",
-            version="1.0",
-            paths=url_for("list_customers", _external=True),
+            name=strings.ROOT_URL_NAME,
+            version=constants.ROUTES_VERSION,
+            # paths=url_for("list_customers", _external=True), # TODO: we need path for list customers first
         ),
         status.HTTP_200_OK,
     )
