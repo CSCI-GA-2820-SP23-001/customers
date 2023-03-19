@@ -11,11 +11,27 @@ DELETE /customers/{id} - deletes a Customer record in the database
 """
 
 from flask import Flask, jsonify, request, url_for, make_response, abort
-from service.common import status  # HTTP Status Codes
+from service.common import constants, status, strings
 from service.models import Customer
 
 # Import Flask application
 from . import app
+
+######################################################################
+# GET INDEX
+######################################################################
+@app.route("/")
+def index():
+    """ Root URL response """
+    app.logger.info("Request for Root URL")
+    return (
+        jsonify(
+            name=strings.ROOT_URL_NAME,
+            version=constants.ROUTES_VERSION,
+            # paths=url_for("list_customers", _external=True), # TODO: we need path for list customers first
+        ),
+        status.HTTP_200_OK,
+    )
 
 ######################################################################
 # ADD A NEW CUSTOMER
@@ -28,14 +44,38 @@ def create_customers():
     """
     app.logger.info("Request to create a customer")
     check_content_type("application/json")
-    customer = Customer()
-    customer.deserialize(request.get_json())
-    customer.create()
-    message = customer.serialize()
-    location_url = url_for("get_customers", customer_id=customer.id, _external=True)
 
-    app.logger.info("Customer with ID [%s] created.", customer.id)
-    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+    # initialize an empty Customer record
+    customer = Customer()
+
+    # deserialize the request JSON into the newly created record
+    customer.deserialize(request.get_json())
+
+    try:
+        # add the customer record to the database
+        customer.create()
+    except:
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            'Failed to create customer'
+        )
+
+    message = customer.serialize()
+
+    # TODO: this cannot be implemented until we have a functioning GET endpoint
+    # location_url = url_for("get_customers", customer_id=customer.id, _external=True)
+
+    # app.logger.info("Customer with ID [%s] created.", customer.id)
+    # return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+
+    return (
+        jsonify(
+            data=[
+                message
+            ]
+        ),
+        status.HTTP_201_CREATED
+    )
 
 ######################################################################
 # DELETE A CUSTOMER

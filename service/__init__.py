@@ -7,7 +7,7 @@ and SQL database
 import sys
 from flask import Flask
 from service import config
-from service.common import model_constants, log_handlers
+from service.common import constants, log_handlers, strings
 
 # Create Flask application
 app = Flask(__name__)
