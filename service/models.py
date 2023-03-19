@@ -121,11 +121,11 @@ class Customer(db.Model):
         return cls.query.get(by_id)
 
     @classmethod
-    def find_by_email(cls, name):
+    def find_by_email(cls, email):
         """Returns all Customers with the given name
 
         Args:
             name (string): the name of the Customers you want to match
         """
         logger.info("Processing email query for %s ...", email)
-        return cls.query.filter(cls.email == email)
+        return cls.query.filter(cls.email == email).all()
