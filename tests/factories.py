@@ -19,7 +19,7 @@ from datetime import date
 
 import factory
 from factory.fuzzy import FuzzyChoice, FuzzyDate
-from service.common.model_constants import PASSWORD_MAX_LEN
+from service.common.constants import PASSWORD_MAX_LEN
 from service.models import Customer
 
 
