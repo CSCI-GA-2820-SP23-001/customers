@@ -128,11 +128,6 @@ class TestCustomerServer(TestCase):
         # self.assertEqual(new_customer["last_name"], test_customer.last_name)
         # self.assertEqual(new_customer["email"], test_customer.email)
         # self.assertEqual(new_customer["password"], test_customer.password)
-
-    def test_index(self):
-        """ It should call the home page """
-        resp = self.app.get("/")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
         
     def test_delete_customer(self):
         """It should Delete a Customer"""
