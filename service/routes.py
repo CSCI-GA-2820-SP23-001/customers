@@ -11,7 +11,7 @@ DELETE /customers/{id} - deletes a Customer record in the database
 """
 
 from flask import Flask, jsonify, request, url_for, make_response, abort
-from service.common import status  # HTTP Status Codes
+from service.common import constants, status, strings
 from service.models import Customer
 
 # Import Flask application
@@ -35,33 +35,43 @@ def index():
     app.logger.info("Request for Root URL")
     return (
         jsonify(
-            name="Customer REST API Service",
-            version="1.0",
-            paths=url_for("list_customers", _external=True),
+            name=strings.ROOT_URL_NAME,
+            version=constants.ROUTES_VERSION,
+            # paths=url_for("list_customers", _external=True), # TODO: we need path for list customers first
         ),
         status.HTTP_200_OK,
     )
 
+######################################################################
+# GET A LIST OF CUSTOMERS
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+    email = request.args.get("email")
+    if email:
+        customers = Customer.find_by_email(email)
+    else:
+        customers = Customer.all()
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
 
 ######################################################################
-#  R E S T   A P I   E N D P O I N T S
+# GET A CUSTOMER
 ######################################################################
-
-# Place your REST API code here ...
-
-######################################################################
-# RETRIEVE A CUSTOMER
-######################################################################
-@app.route("/customers/<int:id>", methods=["GET"])
-def get_customers(id):
+@app.route("/customers/<int:customer_id>", methods=["GET"])
+def get_customers(customer_id):
     """
     Retrieve a single customer
     This endpoint will return a Customer based on it's id
     """
-    app.logger.info("Request for customer with id: %s", id)
-    customer = Customer.find(id)
+    app.logger.info("Request for customer with id: %s", customer_id)
+    customer = Customer.find(customer_id)
     if not customer:
-        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{id}' was not found.")
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
 
     app.logger.info("Returning customer: %s", customer.first_name)
     return jsonify(customer.serialize()), status.HTTP_200_OK
@@ -77,35 +87,60 @@ def create_customers():
     """
     app.logger.info("Request to create a customer")
     check_content_type("application/json")
+
+    # initialize an empty Customer record
     customer = Customer()
+
+    # deserialize the request JSON into the newly created record
     customer.deserialize(request.get_json())
-    customer.create()
+
+    try:
+        # add the customer record to the database
+        customer.create()
+    except:
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            'Failed to create customer'
+        )
+
     message = customer.serialize()
-    location_url = url_for("get_customers", id=customer.id, _external=True)
 
-    app.logger.info("Customer with ID [%s] created.", customer.id)
-    return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
+    # TODO: this cannot be implemented until we have a functioning GET endpoint
+    # location_url = url_for("get_customers", customer_id=customer.id, _external=True)
 
-# LIST A CUSTOMER
+    # app.logger.info("Customer with ID [%s] created.", customer.id)
+    # return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
 
-@app.route("/customers", methods=["GET"])
-def list_customers():
-    """Returns all of the Customers"""
-    app.logger.info("Request for customer list")
-    customers = []
-    email = request.args.get("email")
-    if email:
-        customers = Customer.find_by_email(email)
-    else:
-        customers = Customer.all()
-    results = [customer.serialize() for customer in customers]
-    app.logger.info("Returning %d customers", len(results))
-    return jsonify(results), status.HTTP_200_OK 
+    return (
+        jsonify(
+            data=[
+                message
+            ]
+        ),
+        status.HTTP_201_CREATED
+    )
+
+######################################################################
+# DELETE A CUSTOMER
+######################################################################
+@app.route("/customers/<int:customer_id>", methods=["DELETE"])
+def delete_customers(customer_id):
+    """
+    Delete a Customer
+    This endpoint will delete a Customer based on the id specified in the path
+    """
+    customer = Customer()
+    app.logger.info("Request to delete Customer with id: %s", customer_id)
+    customer = customer.find(customer_id)
+    if customer:
+        customer.delete()
+
+    app.logger.info("Customer with ID [%s] delete complete.", customer_id)
+    return "", status.HTTP_204_NO_CONTENT
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
-
 
 def check_content_type(content_type):
     """Checks that the media type is correct"""

@@ -5,7 +5,7 @@ All of the models are stored in this module
 """
 import logging
 from flask_sqlalchemy import SQLAlchemy
-from service.common import model_constants
+from service.common import constants
 
 logger = logging.getLogger("flask.app")
 
@@ -32,10 +32,10 @@ class Customer(db.Model):
 
     # Table Schema
     id = db.Column(db.Integer, primary_key=True)
-    first_name = db.Column(db.String(model_constants.FIRST_NAME_MAX_LEN), nullable=False)
-    last_name = db.Column(db.String(model_constants.LAST_NAME_MAX_LEN), nullable=False)
-    email = db.Column(db.String(model_constants.EMAIL_MAX_LEN), unique=True, nullable=False)
-    password = db.Column(db.String(model_constants.PASSWORD_MAX_LEN), nullable=False)
+    first_name = db.Column(db.String(constants.FIRST_NAME_MAX_LEN), nullable=False)
+    last_name = db.Column(db.String(constants.LAST_NAME_MAX_LEN), nullable=False)
+    email = db.Column(db.String(constants.EMAIL_MAX_LEN), unique=True, nullable=False)
+    password = db.Column(db.String(constants.PASSWORD_MAX_LEN), nullable=False)
 
     def __repr__(self):
         return f"<Customer {self.email} id=[{self.id}]>"
@@ -121,11 +121,11 @@ class Customer(db.Model):
         return cls.query.get(by_id)
 
     @classmethod
-    def find_by_email(cls, name):
+    def find_by_email(cls, email):
         """Returns all Customers with the given name
 
         Args:
             name (string): the name of the Customers you want to match
         """
         logger.info("Processing email query for %s ...", email)
-        return cls.query.filter(cls.email == email)
+        return cls.query.filter(cls.email == email).all()
