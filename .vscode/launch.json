@@ -15,6 +15,21 @@
             ],
             "jinja": true,
             "justMyCode": true
+        },
+        {
+            "name": "Python: Nosetests",
+            "type": "python",
+            "request": "launch",
+            "module": "nosetests",
+            "args": [
+                "--rednose",
+                "-s",
+                "-v",
+                "tests/"
+            ],
+            "cwd": "${workspaceFolder}",
+            "env": {},
+            "console": "integratedTerminal"
         }
     ]
-},
+}
