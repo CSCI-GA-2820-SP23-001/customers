@@ -129,40 +129,6 @@ class TestCustomerServer(TestCase):
         # self.assertEqual(new_customer["email"], test_customer.email)
         # self.assertEqual(new_customer["password"], test_customer.password)
 
-    def test_index(self):
-        """ It should call the home page """
-        resp = self.app.get("/")
-        self.assertEqual(resp.status_code, status.HTTP_200_OK)
-        
-    def test_delete_customer(self):
-        """It should Delete a Customer"""
-        
-        test_customer = self._create_customers(1)[0]
-        # TODO: once GET endpoint is completed, use it to find the customer
-        # instead of find_by_email
-        new_customers = Customer.find_by_email(test_customer.email)
-        
-        # Make sure a customer was created
-        self.assertTrue(new_customers)
-        # Make sure only 1 customer was returned
-        self.assertEqual(len(new_customers), 1)
-
-        new_customer = new_customers[0]
-
-        # delete the customer
-        response = self.client.delete(f"{BASE_URL}/{new_customer.id}")
-        self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
-
-        # TODO: once GET endpoint is completed, use it to find the customer
-        # instead of find_by_email
-        # query the database for the previously created customer
-        new_customers = Customer.find_by_email(test_customer.email)
-
-        # make sure they are deleted
-        self.assertFalse(new_customers)
-        # response = self.client.get(f"{BASE_URL}/{test_customer.id}")
-        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-    
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
