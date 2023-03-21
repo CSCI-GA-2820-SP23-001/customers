@@ -83,7 +83,7 @@ class TestCustomer(unittest.TestCase):
         customer.create()
         self.assertIsNotNone(customer.id)
         # Fetch it back
-        found_customer = Customer.find(customer.id)
+        found_customer = Customer.find_or_404(customer.id)
         self.assertEqual(found_customer.id, customer.id)
         self.assertEqual(found_customer.first_name, customer.first_name)
 
