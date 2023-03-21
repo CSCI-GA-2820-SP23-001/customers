@@ -12,7 +12,7 @@ from service import app, config
 from service.models import Customer, DataValidationError, db
 
 ######################################################################
-#  Customer   M O D E L   T E S T   C A S E S
+#  C U S T O M E R   M O D E L   T E S T   C A S E S
 ######################################################################
 class TestCustomer(unittest.TestCase):
     """ Test Cases for Customer Model """
@@ -64,7 +64,7 @@ class TestCustomer(unittest.TestCase):
         return customer
 
     ######################################################################
-    #  T E S T   C A S E S
+    #  H A P P Y  T E S T   C A S E S
     ######################################################################
 
     def test_create_customer(self) -> None:
@@ -92,6 +92,7 @@ class TestCustomer(unittest.TestCase):
         return
 
     def test_delete_customer(self) -> None:
+        """It should delete a customer record"""
 
         # create customer
         customer: Customer = self.create_customer()
@@ -113,3 +114,22 @@ class TestCustomer(unittest.TestCase):
         empty_customer: Customer = Customer.find(customer_id)
         self.assertIsNone(empty_customer)
         return
+    
+    ######################################################################
+    #  S A D  T E S T   C A S E S
+    ######################################################################
+
+    def test_typeerror_deserialize(self):
+        """It should fail to deserialize with a TypeError"""
+
+        bad_obj = {
+            'id' : 'John Smith',
+            'first_name' : 'John',
+            'last_name' : 'Smith',
+            'email' : 'johnsmith@johnsmith.com',
+            'password' : 'johnsmith123'
+        }
+
+        customer = self.create_customer()
+        
+        self.assertRaises(TypeError, customer.deserialize(bad_obj)) 

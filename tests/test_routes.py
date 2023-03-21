@@ -13,6 +13,7 @@ from service import app
 from service.models import db, init_db, Customer
 from service.common import constants, status, strings
 from tests.factories import CustomerFactory
+from typing import List
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
 DATABASE_URI = os.getenv(
@@ -88,7 +89,7 @@ class TestCustomerServer(TestCase):
 
         # assert the root URL message has the correct name
         self.assertEqual(data['name'], strings.ROOT_URL_NAME)
-        # assert the version matches the value stored in contstants
+        # assert the version matches the value stored in constants
         self.assertEqual(data['version'], constants.ROUTES_VERSION)
 
     def test_get_customer_list(self):
@@ -99,6 +100,25 @@ class TestCustomerServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
         self.assertEqual(len(data), 5)
+    
+    def test_get_customer_by_email(self):
+        """It should Get a list of customers by email"""
+        
+        test_customers: List[Customer] = self._create_customers(5)
+
+        search_email: str = 'search_email@findme.com'
+        test_customers[0].email = search_email
+        response = self.client.put(f"{BASE_URL}/{test_customers[0].id}", json=test_customers[0].serialize())
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        response = self.client.get(BASE_URL, query_string={ 'email' : search_email })
+
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        get_customers = response.get_json()
+        self.assertEqual(len(get_customers), 1)
+        self.assertEqual(get_customers[0]['email'], search_email)
 
     def test_get_customer(self):
         """It should Get a single Customer"""
@@ -154,6 +174,30 @@ class TestCustomerServer(TestCase):
         self.assertEqual(new_customer["last_name"], test_customer.last_name)
         self.assertEqual(new_customer["email"], test_customer.email)
         self.assertEqual(new_customer["password"], test_customer.password)
+
+    def test_update_customer(self):
+        """It should update an existing Customer"""
+        
+        # Create 4 customers for testing various types of updates
+        test_customers: List[Customer] = self._create_customers(4)
+
+        update_dict = {
+            'first_name' : 'Abraham',
+            'last_name' : 'Abrahamson',
+            'email' : 'honestabe@roadrunner.com',
+            'password' : 'password123'
+        }
+
+        # iterate over the newly created customers with the fields to update
+        for test_customer, update_field, update_value in zip(test_customers, update_dict.keys(), update_dict.values()):
+            test_customer.__setattr__(update_field, update_value)
+            response = self.client.put(f'{BASE_URL}/{test_customer.id}', json=test_customer.serialize())
+            self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+            updated_customer = response.get_json()
+            self.assertEqual(updated_customer[update_field], update_value)
+        
+        return
         
     def test_delete_customer(self):
         """It should Delete a Customer"""
@@ -221,3 +265,48 @@ class TestCustomerServer(TestCase):
         data = response.get_json()
         self.assertIn('Failed to create customer'.lower(), data['message'].lower())
 
+    def test_update_customer_id(self):
+        """It should not update a Customer id"""
+
+        # Create a customer
+        test_customer: Customer = self._create_customers(1)[0]
+
+        update_id = 123
+        test_customer.id, initial_id = update_id, test_customer.id
+        response = self.client.put(f'{BASE_URL}/{initial_id}', json=test_customer.serialize())
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        updated_customer = response.get_json()
+        self.assertNotEqual(updated_customer['id'], update_id)
+
+        return
+    
+    def test_unsupported_method(self):
+        """It should return a method not allowed error"""
+
+        # Create a customer
+        test_customer: Customer = self._create_customers(1)[0]
+
+        patch_first_name: str = 'Bob'
+        test_customer.first_name = patch_first_name
+
+        response = self.client.patch(f'{BASE_URL}/{test_customer.id}', json=test_customer.serialize())
+
+        self.assertEqual(response.status_code, status.HTTP_405_METHOD_NOT_ALLOWED)
+
+    def test_unsupported_media_type(self):
+        """It should return a mediatype not supported error"""
+
+        # Create a customer
+        test_customer: Customer = self._create_customers(1)[0]
+
+        patch_first_name: str = 'Bob'
+        test_customer.first_name = patch_first_name
+
+        response = self.client.put(
+            f'{BASE_URL}/{test_customer.id}',
+            json=test_customer.serialize(),
+            headers={ 'Content-Type' : 'application/pdf' }
+        )
+
+        self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)

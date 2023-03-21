@@ -97,7 +97,7 @@ def create_customers():
     try:
         # add the customer record to the database
         customer.create()
-    except:
+    except Exception:
         abort(
             status.HTTP_400_BAD_REQUEST,
             'Failed to create customer'
@@ -116,6 +116,43 @@ def create_customers():
     )
 
 
+######################################################################
+# UPDATE A CUSTOMER
+######################################################################
+@app.route("/customers/<int:customer_id>", methods=["PUT"])
+def update_customer(customer_id):
+    """
+    Update a Customer
+    This endpoint will update a customer identified by customer_id with the data
+    in the request body
+
+    Args:
+        customer_id (int): Customer ID
+
+    Returns:
+        Customer: JSON Serialized updated customer record
+    """
+
+    app.logger.info("Request to update Customer with id: %s", customer_id)
+    check_content_type('application/json')
+
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f'Customer with id {customer_id} does not exist'
+        )
+
+    customer.deserialize(request.get_json())
+
+    customer.id = customer_id
+
+    app.logger.info(f'Customer with id {customer_id} updated')
+    return (
+        jsonify(customer.serialize()),
+        status.HTTP_200_OK
+    )
+    
 ######################################################################
 # DELETE A CUSTOMER
 ######################################################################
