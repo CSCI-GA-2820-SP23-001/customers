@@ -120,6 +120,14 @@ class Customer(db.Model):
         return cls.query.get(by_id)
 
     @classmethod
+    def find_or_404(cls, by_id: int):
+        """Finds a Customer by it's id
+        :return: an instance with the by_id, or 404_NOT_FOUND if not found
+        """
+        logger.info("Processing lookup or 404 for id %s ...", by_id)
+        return cls.query.get_or_404(by_id)
+
+    @classmethod
     def find_by_email(cls, email):
         """Returns all Customers with the given name
 

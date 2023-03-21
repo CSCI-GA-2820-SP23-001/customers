@@ -2,6 +2,7 @@
 Test cases for Customer Model
 
 """
+import logging
 import unittest
 from tests.factories import CustomerFactory
 from service.models import Customer, db
@@ -64,6 +65,18 @@ class TestCustomer(unittest.TestCase):
 
         customer_fetched: Customer = Customer.find(customer.id)
         self.assertEqual(customer.id, customer_fetched.id)
+
+    def test_read_customer(self):
+        """Test reading a customer record"""
+        customer = CustomerFactory()
+        logging.debug(customer)
+        customer.id = None
+        customer.create()
+        self.assertIsNotNone(customer.id)
+        # Fetch it back
+        found_customer = Customer.find_or_404(customer.id)
+        self.assertEqual(found_customer.id, customer.id)
+        self.assertEqual(found_customer.first_name, customer.first_name)
 
     def test_update_customer(self) -> None:
         """ Test updating customer record """
