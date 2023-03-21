@@ -18,6 +18,15 @@ from service.models import Customer
 from . import app
 
 ######################################################################
+# GET HEALTH CHECK
+######################################################################
+@app.route("/healthcheck")
+def healthcheck():
+    """Let them know our heart is still beating"""
+    return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
+
+
+######################################################################
 # GET INDEX
 ######################################################################
 @app.route("/")
@@ -32,6 +41,40 @@ def index():
         ),
         status.HTTP_200_OK,
     )
+
+######################################################################
+# GET A LIST OF CUSTOMERS
+######################################################################
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+    email = request.args.get("email")
+    if email:
+        customers = Customer.find_by_email(email)
+    else:
+        customers = Customer.all()
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
+
+######################################################################
+# GET A CUSTOMER
+######################################################################
+@app.route("/customers/<int:customer_id>", methods=["GET"])
+def get_customers(customer_id):
+    """
+    Retrieve a single customer
+    This endpoint will return a Customer based on it's id
+    """
+    app.logger.info("Request for customer with id: %s", customer_id)
+    customer = Customer.find(customer_id)
+    if not customer:
+        abort(status.HTTP_404_NOT_FOUND, f"Customer with id '{customer_id}' was not found.")
+
+    app.logger.info("Returning customer: %s", customer.first_name)
+    return jsonify(customer.serialize()), status.HTTP_200_OK
 
 ######################################################################
 # ADD A NEW CUSTOMER
@@ -63,19 +106,15 @@ def create_customers():
     message = customer.serialize()
 
     # TODO: this cannot be implemented until we have a functioning GET endpoint
-    # location_url = url_for("get_customers", customer_id=customer.id, _external=True)
+    location_url = url_for("get_customers", customer_id=customer.id, _external=True)
 
-    # app.logger.info("Customer with ID [%s] created.", customer.id)
-    # return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
-
+    app.logger.info("Customer with ID [%s] created.", customer.id)
     return (
-        jsonify(
-            data=[
-                message
-            ]
-        ),
-        status.HTTP_201_CREATED
+        jsonify(message),
+        status.HTTP_201_CREATED,
+        { "location" : location_url }
     )
+
 
 ######################################################################
 # DELETE A CUSTOMER
@@ -98,7 +137,6 @@ def delete_customers(customer_id):
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
-
 
 def check_content_type(content_type):
     """Checks that the media type is correct"""
