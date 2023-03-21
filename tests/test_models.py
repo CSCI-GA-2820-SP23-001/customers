@@ -2,43 +2,37 @@
 Test cases for Customer Model
 
 """
-import os
-import logging
-from tests.factories import CustomerFactory
-from flask import Flask
-from flask_sqlalchemy import SQLAlchemy
 import unittest
-from service import app, config
-from service.models import Customer, DataValidationError, db
+from tests.factories import CustomerFactory
+from service.models import Customer, db
 
 ######################################################################
-#  Customer   M O D E L   T E S T   C A S E S
+#  C U S T O M E R   M O D E L   T E S T   C A S E S
 ######################################################################
+
+
 class TestCustomer(unittest.TestCase):
     """ Test Cases for Customer Model """
 
     @classmethod
     def setUpClass(cls):
         """ This runs once before the entire test suite """
-        
+
         # Drop existing tables from previous tests
         db.drop_all()
 
         # Close session from previous tests
         db.session.close()
-        
+
         # Create all the ORM-mapped database tables
         db.create_all()
-        return
-        
 
     @classmethod
     def tearDownClass(cls):
         """ This runs once after the entire test suite """
-        
+
         # disconnect from the database
         db.session.close()
-        return
 
     def setUp(self):
         """ This runs before each test """
@@ -47,15 +41,12 @@ class TestCustomer(unittest.TestCase):
         db.session.query(Customer).delete()
         # commit the transaction
         db.session.commit()
-        return
-
 
     def tearDown(self):
         """ This runs after each test """
-        
+
         # close session
         db.session.remove()
-        return
 
     def create_customer(self) -> Customer:
         """ Convenience method to create customer record """
@@ -64,7 +55,7 @@ class TestCustomer(unittest.TestCase):
         return customer
 
     ######################################################################
-    #  T E S T   C A S E S
+    #  H A P P Y  T E S T   C A S E S
     ######################################################################
 
     def test_create_customer(self) -> None:
@@ -73,7 +64,6 @@ class TestCustomer(unittest.TestCase):
 
         customer_fetched: Customer = Customer.find(customer.id)
         self.assertEqual(customer.id, customer_fetched.id)
-        return
 
     def test_read_customer(self):
         """Test reading a customer record"""
@@ -101,9 +91,9 @@ class TestCustomer(unittest.TestCase):
 
         customer: Customer = Customer.find(customer.id)
         self.assertEqual(customer.first_name, new_name)
-        return
 
     def test_delete_customer(self) -> None:
+        """It should delete a customer record"""
 
         # create customer
         customer: Customer = self.create_customer()
@@ -124,4 +114,22 @@ class TestCustomer(unittest.TestCase):
         # search for customer by id
         empty_customer: Customer = Customer.find(customer_id)
         self.assertIsNone(empty_customer)
-        return
+
+    ######################################################################
+    #  S A D  T E S T   C A S E S
+    ######################################################################
+
+    def test_typeerror_deserialize(self):
+        """It should fail to deserialize with a TypeError"""
+
+        bad_obj = {
+            'id': 'John Smith',
+            'first_name': 'John',
+            'last_name': 'Smith',
+            'email': 'johnsmith@johnsmith.com',
+            'password': 'johnsmith123'
+        }
+
+        customer = self.create_customer()
+
+        self.assertRaises(TypeError, customer.deserialize(bad_obj))

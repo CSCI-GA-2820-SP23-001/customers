@@ -67,9 +67,9 @@ class Customer(db.Model):
         return {
             "id": self.id,
             "first_name": self.first_name,
-            "last_name" : self.last_name,
-            "email" : self.email,
-            "password" : self.password
+            "last_name": self.last_name,
+            "email": self.email,
+            "password": self.password
         }
 
     def deserialize(self, data):
@@ -80,7 +80,6 @@ class Customer(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            
             self.id = data["id"]
             self.first_name = data["first_name"]
             self.last_name = data["last_name"]
