@@ -93,7 +93,8 @@ class TestCustomerServer(TestCase):
 
     def test_get_customer_list(self):
         """It should Get a list of Customers"""
-        customers = self._create_customers(5)
+        
+        self._create_customers(5)
         response = self.client.get(BASE_URL)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
@@ -126,62 +127,57 @@ class TestCustomerServer(TestCase):
         self.assertEqual(response.status_code, status.HTTP_201_CREATED)
 
 
-        # TODO: This cannot be implemented until we have a functioning GET endpoint
         # # Make sure location header is set
-        # location = response.headers.get("Location", None)
-        # self.assertIsNotNone(location)
+        location = response.headers.get("location", None)
+        self.assertIsNotNone(location)
 
         # # Get the newly created customer from the POST response
-        # new_customer = response.get_json()
+        new_customer = response.get_json()
 
         # # Check the data is correct
-        # self.assertEqual(new_customer["first_name"], test_customer.first_name)
-        # self.assertEqual(new_customer["last_name"], test_customer.last_name)
-        # self.assertEqual(new_customer["email"], test_customer.email)
-        # self.assertEqual(new_customer["password"], test_customer.password)
+        self.assertEqual(new_customer["first_name"], test_customer.first_name)
+        self.assertEqual(new_customer["last_name"], test_customer.last_name)
+        self.assertEqual(new_customer["email"], test_customer.email)
+        self.assertEqual(new_customer["password"], test_customer.password)
 
 
-        # # fetch the new customer from the GET endpoint
-        # response = self.client.get(new_customer)
+        # fetch the new customer from the GET endpoint
+        new_customer_id = new_customer['id']
+        response = self.client.get(f"{BASE_URL}/{new_customer_id}")
 
-        # # assert the customer was fetched successfully
-        # self.assertEqual(response.status_code, status.HTTP_200_OK)
+        # assert the customer was fetched successfully
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
 
-        # # assert that the data is correct
-        # new_customer = response.get_json()
-        # self.assertEqual(new_customer["first_name"], test_customer.first_name)
-        # self.assertEqual(new_customer["last_name"], test_customer.last_name)
-        # self.assertEqual(new_customer["email"], test_customer.email)
-        # self.assertEqual(new_customer["password"], test_customer.password)
+        # assert that the data is correct
+        new_customer = response.get_json()
+        self.assertEqual(new_customer["first_name"], test_customer.first_name)
+        self.assertEqual(new_customer["last_name"], test_customer.last_name)
+        self.assertEqual(new_customer["email"], test_customer.email)
+        self.assertEqual(new_customer["password"], test_customer.password)
         
     def test_delete_customer(self):
         """It should Delete a Customer"""
         
         test_customer = self._create_customers(1)[0]
-        # TODO: once GET endpoint is completed, use it to find the customer
-        # instead of find_by_email
-        new_customers = Customer.find_by_email(test_customer.email)
+        response = self.client.get(f'{BASE_URL}/{test_customer.id}')
         
         # Make sure a customer was created
-        self.assertTrue(new_customers)
-        # Make sure only 1 customer was returned
-        self.assertEqual(len(new_customers), 1)
+        self.assertEqual(status.HTTP_200_OK, response.status_code)
 
-        new_customer = new_customers[0]
+        new_customer = response.get_json()
+        self.assertTrue(new_customer)
 
         # delete the customer
-        response = self.client.delete(f"{BASE_URL}/{new_customer.id}")
+        new_customer_id = new_customer['id']
+        response = self.client.delete(f"{BASE_URL}/{new_customer_id}")
         self.assertEqual(response.status_code, status.HTTP_204_NO_CONTENT)
 
-        # TODO: once GET endpoint is completed, use it to find the customer
-        # instead of find_by_email
-        # query the database for the previously created customer
-        new_customers = Customer.find_by_email(test_customer.email)
+        # get the previously created customer
+        response = self.client.get(f"{BASE_URL}/{new_customer_id}")
 
         # make sure they are deleted
-        self.assertFalse(new_customers)
-        # response = self.client.get(f"{BASE_URL}/{test_customer.id}")
-        # self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
     
     ######################################################################
     #  T E S T   S A D   P A T H S
@@ -221,3 +217,7 @@ class TestCustomerServer(TestCase):
 
         response = self.client.post(BASE_URL, json=test_customer.serialize())
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
+
+        data = response.get_json()
+        self.assertIn('Failed to create customer'.lower(), data['message'].lower())
+

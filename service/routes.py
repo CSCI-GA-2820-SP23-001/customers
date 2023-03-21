@@ -106,19 +106,15 @@ def create_customers():
     message = customer.serialize()
 
     # TODO: this cannot be implemented until we have a functioning GET endpoint
-    # location_url = url_for("get_customers", customer_id=customer.id, _external=True)
+    location_url = url_for("get_customers", customer_id=customer.id, _external=True)
 
-    # app.logger.info("Customer with ID [%s] created.", customer.id)
-    # return jsonify(message), status.HTTP_201_CREATED, {"Location": location_url}
-
+    app.logger.info("Customer with ID [%s] created.", customer.id)
     return (
-        jsonify(
-            data=[
-                message
-            ]
-        ),
-        status.HTTP_201_CREATED
+        jsonify(message),
+        status.HTTP_201_CREATED,
+        { "location" : location_url }
     )
+
 
 ######################################################################
 # DELETE A CUSTOMER
