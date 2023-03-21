@@ -2,6 +2,7 @@
 Test cases for Customer Model
 
 """
+import logging
 import unittest
 from tests.factories import CustomerFactory
 from service.models import Customer, db
