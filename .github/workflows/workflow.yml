@@ -45,7 +45,7 @@ jobs:
       - name: Run unit tests with nose
         run: nosetests
         env:
-          DATABASE_URI: os.getenv("DATABASE_URI", "postgresql://postgres:postgres@localhost:5432/testdb")
+          DATABASE_URI: postgresql://postgres:postgres@localhost:5432/testdb
 
       # Uncomment the following 2 lines during hands-on lab
       
