@@ -41,8 +41,7 @@ def index():
     return (
         jsonify(
             name=strings.ROOT_URL_NAME,
-            version=constants.ROUTES_VERSION,
-            # paths=url_for("list_customers", _external=True), # TODO: we need path for list customers first
+            version=constants.ROUTES_VERSION
         ),
         status.HTTP_200_OK,
     )
@@ -124,7 +123,6 @@ def create_customers():
         status.HTTP_201_CREATED,
         {"location": location_url}
     )
-
 
 ######################################################################
 # UPDATE A CUSTOMER
