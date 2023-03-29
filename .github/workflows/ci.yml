@@ -1,8 +1,8 @@
 name: CI Build
 on:
-  push:
-    branches:
-    - git_actions_2
+  # push:
+  #   branches:
+  #   - git_actions_2
   pull_request:
     branches:
       - master
