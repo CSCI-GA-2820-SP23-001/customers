@@ -11,6 +11,7 @@ DELETE /customers/{id} - deletes a Customer record in the database
 """
 
 from flask import jsonify, request, url_for, abort
+from sqlalchemy.exc import SQLAlchemyError
 from service.common import constants, status, strings
 from service.models import Customer
 
@@ -41,8 +42,7 @@ def index():
     return (
         jsonify(
             name=strings.ROOT_URL_NAME,
-            version=constants.ROUTES_VERSION,
-            # paths=url_for("list_customers", _external=True), # TODO: we need path for list customers first
+            version=constants.ROUTES_VERSION
         ),
         status.HTTP_200_OK,
     )
@@ -108,7 +108,8 @@ def create_customers():
     try:
         # add the customer record to the database
         customer.create()
-    except Exception:
+    except SQLAlchemyError as sql_error:
+        app.logger.error(f'Failed to create customer: {str(sql_error)}')
         abort(
             status.HTTP_400_BAD_REQUEST,
             'Failed to create customer'
@@ -124,7 +125,6 @@ def create_customers():
         status.HTTP_201_CREATED,
         {"location": location_url}
     )
-
 
 ######################################################################
 # UPDATE A CUSTOMER
