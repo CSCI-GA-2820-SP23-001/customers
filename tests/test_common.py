@@ -2,8 +2,10 @@
 Test file for common module code
 """
 
+
 import unittest
 from service.common.enums import CustomerStatus
+
 
 class TestCommon(unittest.TestCase):
     """ Test cases for Common module """
@@ -20,7 +22,6 @@ class TestCommon(unittest.TestCase):
         self.assertEqual(str(CustomerStatus.SUSPENDED), "SUSPENDED")
         self.assertEqual(CustomerStatus.ACTIVE, CustomerStatus.from_string("ACTIVE"))
         self.assertEqual(CustomerStatus.SUSPENDED, CustomerStatus.from_string("SUSPENDED"))
-
 
     ######################################################################
     #  S A D  T E S T   C A S E S
