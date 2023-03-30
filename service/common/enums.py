@@ -21,6 +21,6 @@ class CustomerStatus(Enum):
             raise ValueError(f'Invalid CustomerStatus: {label}') from exc
 
     @classmethod
-    def string_equals(cls, label, other):
+    def string_equals(cls, label: str, other: "CustomerStatus"):
         """Compares a string to a CustomerStatus"""
         return cls.from_string(label) == other

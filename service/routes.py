@@ -207,12 +207,6 @@ def suspend_customer(customer_id):
             status.HTTP_404_NOT_FOUND,
             f'Customer with id {customer_id} does not exist'
         )
-    except SQLAlchemyError as sql_error:
-        app.logger.error(f'Failed to suspend customer with id {customer_id}: {str(sql_error)}')
-        abort(
-            status.HTTP_400_BAD_REQUEST,
-            f'Failed to suspend customer with id {customer_id}'
-        )
 
     app.logger.info(f"Customer with id [{customer_id}] suspend complete.")
     return (
@@ -242,12 +236,6 @@ def activate_customer(customer_id):
         abort(
             status.HTTP_404_NOT_FOUND,
             f'Customer with id {customer_id} does not exist'
-        )
-    except SQLAlchemyError as sql_error:
-        app.logger.error(f'Failed to activate customer with id {customer_id}: {str(sql_error)}')
-        abort(
-            status.HTTP_400_BAD_REQUEST,
-            f'Failed to activate customer with id {customer_id}'
         )
 
     app.logger.info(f"Customer with id [{customer_id}] activated.")
