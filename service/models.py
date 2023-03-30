@@ -5,7 +5,9 @@ All of the models are stored in this module
 """
 import logging
 from flask_sqlalchemy import SQLAlchemy
-from service.common import constants
+from sqlalchemy.exc import NoResultFound
+from sqlalchemy.types import Enum
+from service.common import constants, enums
 
 logger = logging.getLogger("flask.app")
 
@@ -36,6 +38,10 @@ class Customer(db.Model):
     last_name = db.Column(db.String(constants.LAST_NAME_MAX_LEN), nullable=False)
     email = db.Column(db.String(constants.EMAIL_MAX_LEN), unique=True, nullable=False)
     password = db.Column(db.String(constants.PASSWORD_MAX_LEN), nullable=False)
+    status = db.Column(
+        Enum(enums.CustomerStatus, name='customer_status', values_callable=lambda obj: [e.value for e in obj]),
+        default=enums.CustomerStatus.ACTIVE,
+        nullable=False)
 
     def __repr__(self):
         return f"<Customer {self.email} id=[{self.id}]>"
@@ -69,7 +75,8 @@ class Customer(db.Model):
             "first_name": self.first_name,
             "last_name": self.last_name,
             "email": self.email,
-            "password": self.password
+            "password": self.password,
+            "status": str(self.status)
         }
 
     def deserialize(self, data):
@@ -85,6 +92,7 @@ class Customer(db.Model):
             self.last_name = data["last_name"]
             self.email = data["email"]
             self.password = data["password"]
+            self.status = enums.CustomerStatus.from_string(data["status"])
 
         except KeyError as error:
             raise DataValidationError(
@@ -136,3 +144,35 @@ class Customer(db.Model):
         """
         logger.info("Processing email query for %s ...", email)
         return cls.query.filter(cls.email == email).all()
+
+    @classmethod
+    def set_status(cls, customer_id: int, status: enums.CustomerStatus) -> "Customer":
+        """Sets the status of a customer
+        :param customer_id: id of the customer
+        :param status: status to give to customer
+        :return: customer object with new status
+        """
+        customer = cls.find(customer_id)
+
+        if not customer:
+            raise NoResultFound(f"Customer with id '{customer_id}' was not found.")
+
+        customer.status = status
+        customer.update()
+        return customer
+
+    @classmethod
+    def suspend(cls, customer_id: int) -> "Customer":
+        """Suspends a customer
+        :param customer_id: id of the customer
+        :return: customer object with suspended status
+        """
+        return cls.set_status(customer_id, enums.CustomerStatus.SUSPENDED)
+
+    @classmethod
+    def activate(cls, customer_id: int) -> "Customer":
+        """Activates a customer
+        :param customer_id: id of the customer
+        :return: customer object with active status
+        """
+        return cls.set_status(customer_id, enums.CustomerStatus.ACTIVE)

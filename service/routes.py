@@ -11,7 +11,7 @@ DELETE /customers/{id} - deletes a Customer record in the database
 """
 
 from flask import jsonify, request, url_for, abort
-from sqlalchemy.exc import SQLAlchemyError
+from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from service.common import constants, status, strings
 from service.models import Customer
 
@@ -184,6 +184,77 @@ def delete_customers(customer_id):
 
     app.logger.info("Customer with ID [%s] delete complete.", customer_id)
     return "", status.HTTP_204_NO_CONTENT
+
+######################################################################
+# SUSPEND A CUSTOMER
+######################################################################
+
+
+@app.route("/customers/<int:customer_id>/suspend", methods=["PUT"])
+def suspend_customer(customer_id):
+    """
+    Suspend a Customer
+    This endpoint will suspend a Customer based on the id specified in the path
+    """
+    app.logger.info("Request to suspend Customer with id: %s", customer_id)
+
+    try:
+        customer: Customer = Customer.suspend(customer_id)
+    except NoResultFound:
+        # if no customer is found, return a 404
+        app.logger.error(f'Customer with id {customer_id} does not exist')
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f'Customer with id {customer_id} does not exist'
+        )
+    except SQLAlchemyError as sql_error:
+        app.logger.error(f'Failed to suspend customer with id {customer_id}: {str(sql_error)}')
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            f'Failed to suspend customer with id {customer_id}'
+        )
+
+    app.logger.info(f"Customer with id [{customer_id}] suspend complete.")
+    return (
+        jsonify(customer.serialize()),
+        status.HTTP_200_OK
+    )
+
+######################################################################
+# ACTIVATE A CUSTOMER
+######################################################################
+
+
+@app.route("/customers/<int:customer_id>/activate", methods=["PUT"])
+def activate_customer(customer_id):
+    """
+    Activate a Customer
+    This endpoint will activate a Customer, setting suspended to false,
+    based on the id specified in the path
+    """
+    app.logger.info("Request to activate Customer with id: %s", customer_id)
+
+    try:
+        customer: Customer = Customer.activate(customer_id)
+    except NoResultFound:
+        # if no customer is found, return a 404
+        app.logger.error(f'Customer with id {customer_id} does not exist')
+        abort(
+            status.HTTP_404_NOT_FOUND,
+            f'Customer with id {customer_id} does not exist'
+        )
+    except SQLAlchemyError as sql_error:
+        app.logger.error(f'Failed to activate customer with id {customer_id}: {str(sql_error)}')
+        abort(
+            status.HTTP_400_BAD_REQUEST,
+            f'Failed to activate customer with id {customer_id}'
+        )
+
+    app.logger.info(f"Customer with id [{customer_id}] activated.")
+    return (
+        jsonify(customer.serialize()),
+        status.HTTP_200_OK
+    )
 
 ######################################################################
 #  U T I L I T Y   F U N C T I O N S

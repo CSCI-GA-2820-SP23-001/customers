@@ -5,6 +5,7 @@ Test cases for Customer Model
 import logging
 import unittest
 from tests.factories import CustomerFactory
+from service.common.enums import CustomerStatus
 from service.models import Customer, db
 
 ######################################################################
@@ -128,7 +129,8 @@ class TestCustomer(unittest.TestCase):
             'first_name': 'John',
             'last_name': 'Smith',
             'email': 'johnsmith@johnsmith.com',
-            'password': 'johnsmith123'
+            'password': 'johnsmith123',
+            'status': CustomerStatus.ACTIVE.value
         }
 
         customer = self.create_customer()

@@ -11,7 +11,7 @@ from typing import List
 from unittest import TestCase
 from service import app
 from service.models import db, init_db, Customer
-from service.common import constants, status, strings
+from service.common import constants, enums, status, strings
 from tests.factories import CustomerFactory
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
@@ -219,6 +219,54 @@ class TestCustomerServer(TestCase):
         # make sure they are deleted
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_suspend_customer(self):
+        """It should Suspend a Customer"""
+
+        # create a customer
+        test_customer = self._create_customers(1)[0]
+
+        # suspend the customer
+        response = self.client.put(f"{BASE_URL}/{test_customer.id}/suspend")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # get the customer
+        response = self.client.get(f"{BASE_URL}/{test_customer.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assert that the customer is suspended
+        customer = response.get_json()
+        self.assertEqual(enums.CustomerStatus.from_string(customer['status']), enums.CustomerStatus.SUSPENDED)
+
+    def test_activate_customer(self):
+        """It should Activate a Customer"""
+
+        # create a customer
+        test_customer = self._create_customers(1)[0]
+
+        # suspend the customer
+        response = self.client.put(f"{BASE_URL}/{test_customer.id}/suspend")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # get the customer
+        response = self.client.get(f"{BASE_URL}/{test_customer.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assert that the customer is suspended
+        customer = response.get_json()
+        self.assertEqual(enums.CustomerStatus.from_string(customer['status']), enums.CustomerStatus.SUSPENDED)
+
+        # activate the customer
+        response = self.client.put(f"{BASE_URL}/{test_customer.id}/activate")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # get the customer
+        response = self.client.get(f"{BASE_URL}/{test_customer.id}")
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+
+        # assert that the customer is active
+        customer = response.get_json()
+        self.assertEqual(enums.CustomerStatus.from_string(customer['status']), enums.CustomerStatus.ACTIVE)
+
     ######################################################################
     #  T E S T   S A D   P A T H S
     ######################################################################
@@ -305,3 +353,17 @@ class TestCustomerServer(TestCase):
         )
 
         self.assertEqual(response.status_code, status.HTTP_415_UNSUPPORTED_MEDIA_TYPE)
+
+    def test_suspend_customer_not_found(self):
+        """It should not Suspend a Customer that does not exist"""
+
+        # suspend the customer
+        response = self.client.put(f"{BASE_URL}/0/suspend")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_activate_customer_not_found(self):
+        """It should not Activate a Customer that does not exist"""
+
+        # activate the customer
+        response = self.client.put(f"{BASE_URL}/0/activate")
+        self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
