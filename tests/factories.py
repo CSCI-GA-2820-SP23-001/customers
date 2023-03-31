@@ -18,6 +18,7 @@ Test Factory to make fake objects for testing
 
 import factory
 from service.common.constants import PASSWORD_MAX_LEN
+from service.common.enums import CustomerStatus
 from service.models import Customer
 
 
@@ -34,3 +35,4 @@ class CustomerFactory(factory.Factory):
     last_name = factory.Faker("last_name")
     email = factory.Faker("email")
     password = factory.Faker("pystr", max_chars=PASSWORD_MAX_LEN)
+    status = CustomerStatus.ACTIVE
