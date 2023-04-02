@@ -245,6 +245,30 @@ def activate_customer(customer_id):
     )
 
 ######################################################################
+# QUERY A CUSTOMER
+######################################################################
+
+@app.route("/customers", methods=["GET"])
+def list_customers():
+    """Returns all of the Customers"""
+    app.logger.info("Request for customer list")
+    customers = []
+
+    # Get the query parameters for filtering
+    filter_field = request.args.get("filter_field")
+    filter_value = request.args.get("filter_value")
+
+    # If the query parameters are present, filter by them
+    if filter_field and filter_value:
+        customers = Customer.filter_by_field_contains(filter_field, filter_value)
+    else:
+        customers = Customer.all()
+
+    results = [customer.serialize() for customer in customers]
+    app.logger.info("Returning %d customers", len(results))
+    return jsonify(results), status.HTTP_200_OK
+
+######################################################################
 #  U T I L I T Y   F U N C T I O N S
 ######################################################################
 
