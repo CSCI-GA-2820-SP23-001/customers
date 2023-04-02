@@ -176,3 +176,28 @@ class Customer(db.Model):
         :return: customer object with active status
         """
         return cls.set_status(customer_id, enums.CustomerStatus.ACTIVE)
+
+    @classmethod
+    def filter_by_field_contains(cls, field, value):
+        """
+        Filters the list of customers by the given field and value using a "contains" filter.
+
+        Args:
+            field (str): The name of the field to filter by.
+            value (str): The value to filter for (the field should contain this value).
+
+        Returns:
+            List[Customer]: The list of customers matching the filter criteria.
+        """
+        matching_customers = []
+
+        # Loop through all the customers and add those that match the filter criteria to the list
+        for customer in cls.all():
+            if field in customer.__dict__:
+                field_value = customer.__dict__[field]
+                if isinstance(field_value, str) and value in field_value:
+                    matching_customers.append(customer)
+                elif isinstance(field_value, (int, float)) and str(value) in str(field_value):
+                    matching_customers.append(customer)
+
+        return matching_customers
