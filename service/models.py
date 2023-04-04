@@ -176,7 +176,7 @@ class Customer(db.Model):
         :return: customer object with active status
         """
         return cls.set_status(customer_id, enums.CustomerStatus.ACTIVE)
-    
+
     @classmethod
     def find_by_first_name(cls, first_name):
         """Returns all Customers with the given first name

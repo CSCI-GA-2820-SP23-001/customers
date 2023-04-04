@@ -368,7 +368,7 @@ class TestCustomerServer(TestCase):
         # activate the customer
         response = self.client.put(f"{BASE_URL}/0/activate")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
-        
+
     def test_query_customer_list_by_first_name(self):
         """It should query customers by first name"""
         customers = self._create_customers(10)
@@ -380,7 +380,7 @@ class TestCustomerServer(TestCase):
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(len(data), len(customers))
+        self.assertEqual(len(data), len(first_name_customers))
         # check the data just to be sure
         for customer in data:
             self.assertEqual(customer["first_name"], test_name)
