@@ -368,18 +368,18 @@ class TestCustomerServer(TestCase):
         response = self.client.put(f"{BASE_URL}/0/activate")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
         
-    def test_query_customer_list_by_name(self):
-        """It should query customers by name"""
+    def test_query_customer_list_by_first_name(self):
+        """It should query customers by first name"""
         customers = self._create_customers(10)
-        test_name = customers[0].name
-        name_customers = [customer for customer in customers if customer.name == test_name]
+        test_first_name = customers[0].first_name
+        first_name_customers = [customer for customer in customers if customer.first_name == test_first_name]
         response = self.client.get(
             BASE_URL,
-            query_string=f"name={quote_plus(test_name)}"
+            query_string=f"first_name={quote_plus(test_first_name)}"
         )
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         data = response.get_json()
-        self.assertEqual(len(data), len(name_customers))
+        self.assertEqual(len(data), len(first_name_customers))
         # check the data just to be sure
         for customer in data:
-            self.assertEqual(customer["name"], test_name)
+            self.assertEqual(customer["first_name"], test_first_name)
