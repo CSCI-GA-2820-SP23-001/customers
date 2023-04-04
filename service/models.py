@@ -176,3 +176,12 @@ class Customer(db.Model):
         :return: customer object with active status
         """
         return cls.set_status(customer_id, enums.CustomerStatus.ACTIVE)
+
+    @classmethod
+    def find_by_first_name(cls, first_name):
+        """Returns all Customers with the given first name
+        Args:
+            name (string): the name of the Customers you want to match
+        """
+        logger.info("Processing first name query for %s ...", first_name)
+        return cls.query.filter(cls.first_name == first_name).all()

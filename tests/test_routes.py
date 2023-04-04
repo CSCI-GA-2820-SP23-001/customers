@@ -9,6 +9,7 @@ import os
 import logging
 from typing import List
 from unittest import TestCase
+from urllib.parse import quote_plus
 from service import app
 from service.models import db, init_db, Customer
 from service.common import constants, enums, status, strings
@@ -367,3 +368,19 @@ class TestCustomerServer(TestCase):
         # activate the customer
         response = self.client.put(f"{BASE_URL}/0/activate")
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_query_customer_list_by_first_name(self):
+        """It should query customers by first name"""
+        customers = self._create_customers(10)
+        test_name = customers[0].first_name
+        first_name_customers = [customer for customer in customers if customer.first_name == test_name]
+        response = self.client.get(
+            BASE_URL,
+            query_string=f"first_name={quote_plus(test_name)}"
+        )
+        self.assertEqual(response.status_code, status.HTTP_200_OK)
+        data = response.get_json()
+        self.assertEqual(len(data), len(first_name_customers))
+        # check the data just to be sure
+        for customer in data:
+            self.assertEqual(customer["first_name"], test_name)
