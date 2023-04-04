@@ -58,11 +58,11 @@ def list_customers():
     app.logger.info("Request for customer list")
     customers = []
     email = request.args.get("email")
-    name = request.args.get("name")
+    first_name = request.args.get("first_name")
     if email:
         customers = Customer.find_by_email(email)
-    elif name:
-        customers = customers.find_by_name(name)
+    elif first_name:
+        customers = Customer.find_by_first_name(first_name)
     else:
         customers = Customer.all()
     results = [customer.serialize() for customer in customers]
