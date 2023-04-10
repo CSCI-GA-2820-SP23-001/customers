@@ -12,7 +12,7 @@ DELETE /customers/{id} - deletes a Customer record in the database
 
 from flask import jsonify, request, url_for, abort
 from sqlalchemy.exc import NoResultFound, SQLAlchemyError
-from service.common import constants, status, strings
+from service.common import status
 from service.models import Customer
 
 # Import Flask application

@@ -12,7 +12,7 @@ from unittest import TestCase
 from urllib.parse import quote_plus
 from service import app
 from service.models import db, init_db, Customer
-from service.common import constants, enums, status, strings
+from service.common import enums, status
 from tests.factories import CustomerFactory
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
