@@ -18,6 +18,16 @@ from service.models import Customer
 # Import Flask application
 from . import app
 
+######################################################################
+# GET INDEX
+######################################################################
+
+
+@app.route("/")
+def index():
+    """Root URL response"""
+    app.logger.info("Request for Root URL")
+    return app.send_static_file("index.html")
 
 ######################################################################
 # GET HEALTH CHECK
@@ -28,24 +38,6 @@ from . import app
 def healthcheck():
     """Let them know our heart is still beating"""
     return jsonify(status=200, message="Healthy"), status.HTTP_200_OK
-
-
-######################################################################
-# GET INDEX
-######################################################################
-
-
-@app.route("/")
-def index():
-    """ Root URL response """
-    app.logger.info("Request for Root URL")
-    return (
-        jsonify(
-            name=strings.ROOT_URL_NAME,
-            version=constants.ROUTES_VERSION
-        ),
-        status.HTTP_200_OK,
-    )
 
 ######################################################################
 # GET A LIST OF CUSTOMERS
