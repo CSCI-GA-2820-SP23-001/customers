@@ -24,7 +24,7 @@ spec:
       restartPolicy: Always
       containers:
       - name: customers-app
-        image: us.icr.io/customers-dev/customers-app:1.0
+        image: us.icr.io/customers-dev/customers-app:1.1
         imagePullPolicy: IfNotPresent
         ports:
         - containerPort: 8080
