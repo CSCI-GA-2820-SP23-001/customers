@@ -64,6 +64,5 @@ jobs:
 
       - name: Upload code coverage
         run: |
-          apk add curl
-          apk add bash
+          apt install curl
           curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov
