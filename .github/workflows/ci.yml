@@ -62,6 +62,6 @@ jobs:
           DATABASE_URI: "postgresql://postgres:pgs3cr3t@postgres:5432/testdb"
 
       - name: Upload code coverage
-        run: |
-          apt-get install -y curl
-          curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov
+        uses: codecov/codecov-action@v3
+        with:
+          version: "v0.1.13"
