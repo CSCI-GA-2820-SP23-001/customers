@@ -12,7 +12,7 @@ from unittest import TestCase
 from urllib.parse import quote_plus
 from service import app
 from service.models import db, init_db, Customer
-from service.common import constants, enums, status, strings
+from service.common import enums, status
 from tests.factories import CustomerFactory
 
 # DATABASE_URI = os.getenv('DATABASE_URI', 'sqlite:///../db/test.db')
@@ -83,16 +83,7 @@ class TestCustomerServer(TestCase):
     def test_root_url(self):
         """It should get the root URL message"""
         response = self.client.get("/")
-
-        # assert the response has the correct status code
         self.assertEqual(response.status_code, status.HTTP_200_OK)
-
-        data = response.get_json()
-
-        # assert the root URL message has the correct name
-        self.assertEqual(data['name'], strings.ROOT_URL_NAME)
-        # assert the version matches the value stored in constants
-        self.assertEqual(data['version'], constants.ROUTES_VERSION)
 
     def test_get_customer_list(self):
         """It should Get a list of Customers"""

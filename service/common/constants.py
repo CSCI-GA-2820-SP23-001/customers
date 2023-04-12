@@ -10,4 +10,4 @@ PASSWORD_MAX_LEN: int = 20
 ############
 #  ROUTES  #
 ############
-ROUTES_VERSION: str = "1.0"
+ROUTES_VERSION: str = "1.1"

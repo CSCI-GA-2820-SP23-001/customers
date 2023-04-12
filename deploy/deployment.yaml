@@ -1,0 +1,50 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: customers-app
+  labels:
+    app: customers-app
+spec:
+  replicas: 2
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxSurge: 0%
+      maxUnavailable: 50%
+  selector:
+    matchLabels:
+      app: customers-app
+  template:
+    metadata:
+      labels:
+        app: customers-app
+    spec:
+      imagePullSecrets:
+      - name: all-icr-io
+      restartPolicy: Always
+      containers:
+      - name: customers-app
+        image: us.icr.io/customers-dev/customers-app:1.1
+        imagePullPolicy: IfNotPresent
+        ports:
+        - containerPort: 8080
+          protocol: TCP
+        env:
+          - name: DATABASE_URI
+            valueFrom:
+              secretKeyRef:
+                name: postgres-creds
+                key: database_uri
+        readinessProbe:
+          initialDelaySeconds: 5
+          periodSeconds: 30
+          httpGet:
+            path: /healthcheck
+            port: 8080
+        resources:
+          limits:
+            cpu: "0.20"
+            memory: "64Mi"
+          requests:
+            cpu: "0.10"
+            memory: "32Mi"
