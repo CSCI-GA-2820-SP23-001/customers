@@ -3,7 +3,6 @@ on:
   pull_request:
     branches:
       - master
-      - ui-query
     paths-ignore:
     - 'README.md'
     - '.vscode/**'
@@ -64,5 +63,5 @@ jobs:
 
       - name: Upload code coverage
         run: |
-          apt install curl
+          apt-get install -y curl
           curl -Os https://uploader.codecov.io/latest/linux/codecov && chmod +x codecov && ./codecov
