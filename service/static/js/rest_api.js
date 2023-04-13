@@ -10,8 +10,6 @@ $(function () {
         SUSPENDED: 'SUSPENDED'
     };
 
-    const API_URL = 'http://http://159.122.187.192:31000/customers';
-
     // ****************************************
     //  U T I L I T Y   F U N C T I O N S
     // ****************************************
