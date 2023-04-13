@@ -34,7 +34,7 @@
 			]
 		},
 	},
-	"postCreateCommand": "sudo pip install -r requirements.txt",
+	"postCreateCommand": "if [ ! -f .env ]; then cp dot-env-example .env; fi;",
 
 	// Use 'forwardPorts' to make a list of ports inside the container available locally.
 	// "forwardPorts": 8080,
