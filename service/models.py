@@ -5,7 +5,7 @@ All of the models are stored in this module
 """
 import logging
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy.exc import NoResultFound
+from sqlalchemy.exc import NoResultFound, SQLAlchemyError
 from sqlalchemy.types import Enum
 from service.common import constants, enums
 
@@ -50,10 +50,15 @@ class Customer(db.Model):
         """
         Creates a Customer to the database
         """
-        logger.info("Creating Customer: %s", self.email)
-        self.id = None  # pylint: disable=invalid-name
-        db.session.add(self)
-        db.session.commit()
+
+        try:
+            logger.info("Creating Customer: %s", self.email)
+            self.id = None  # pylint: disable=invalid-name
+            db.session.add(self)
+            db.session.commit()
+        except SQLAlchemyError as sql_error:
+            db.session.rollback()
+            raise sql_error
 
     def update(self):
         """
@@ -87,7 +92,7 @@ class Customer(db.Model):
             data (dict): A dictionary containing the resource data
         """
         try:
-            self.id = data["id"]
+            self.id = (data["id"] if "id" in data else None)
             self.first_name = data["first_name"]
             self.last_name = data["last_name"]
             self.email = data["email"]
