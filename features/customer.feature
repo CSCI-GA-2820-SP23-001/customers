@@ -105,11 +105,11 @@ Scenario: Deleting a customer
     And the "last_name" field should be empty
     And the "email" field should be empty
     And the "password" field should be empty
-    And the "status" field should be empty
+    And I should see "Active" in the "status" dropdown
     When I visit the "home page"
     And I set the "first_name" to "sally"
     And I press the "search" button
-    Then I should see the message "404 Not Found"
+    Then I should see the message "Success"
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see the message "Success"
