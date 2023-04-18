@@ -170,7 +170,7 @@ $(function () {
 
         ajax.done(function(res){
             clear_form_data()
-            flash_message("customer has been Deleted!")
+            flash_message("Customer has been Deleted!")
         });
 
         ajax.fail(function(res){
