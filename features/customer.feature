@@ -91,3 +91,26 @@ Scenario: Search for john
 #     Then I should see the message "Success"
 #     And I should see "Loki" in the results
 #     And I should not see "fido" in the results
+
+Scenario: Deleting a customer
+    When I visit the "home page"
+    And I set the "first_name" to "sally"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "sally" in the "first_name" field
+    When I press the "Delete" button
+    Then I should see the message "customer has been Deleted!"
+    And the "id" field should be empty
+    And the "first_name" field should be empty
+    And the "last_name" field should be empty
+    And the "email" field should be empty
+    And the "password" field should be empty
+    And I should see "Active" in the "status" dropdown
+    When I visit the "home page"
+    And I set the "first_name" to "sally"
+    And I press the "search" button
+    Then I should see the message "Success"
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should not see "sally" in the results
