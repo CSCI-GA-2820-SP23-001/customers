@@ -86,19 +86,19 @@ $(function () {
 
     $("#update-btn").click(function () {
 
+        let first_name = $("#customer_first_name").val();
+        let last_name = $("#customer_last_name").val();
+        let email = $("#customer_email").val();
+        let password = $("#customer_password").val();
+        let status = $("#customer_status").val();
         let customer_id = $("#customer_id").val();
-        let name = $("#customer_name").val();
-        let category = $("#customer_category").val();
-        let available = $("#customer_available").val() == "true";
-        let gender = $("#customer_gender").val();
-        let birthday = $("#customer_birthday").val();
 
         let data = {
-            "name": name,
-            "category": category,
-            "available": available,
-            "gender": gender,
-            "birthday": birthday
+            "first_name": first_name,
+            "last_name": last_name,
+            "email": email,
+            "password": password,
+            "status": status
         };
 
         $("#flash_message").empty();
