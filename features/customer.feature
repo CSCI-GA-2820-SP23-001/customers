@@ -69,28 +69,6 @@ Scenario: Search for john
     And I should not see "sally" in the results
     And I should not see "daisy" in the results
 
-# Scenario: Update a Pet
-#     When I visit the "Home Page"
-#     And I set the "Name" to "fido"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the "Name" field
-#     And I should see "dog" in the "Category" field
-#     When I change "Name" to "Loki"
-#     And I press the "Update" button
-#     Then I should see the message "Success"
-#     When I copy the "Id" field
-#     And I press the "Clear" button
-#     And I paste the "Id" field
-#     And I press the "Retrieve" button
-#     Then I should see the message "Success"
-#     And I should see "Loki" in the "Name" field
-#     When I press the "Clear" button
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "Loki" in the results
-#     And I should not see "fido" in the results
-
 Scenario: Deleting a customer
     When I visit the "home page"
     And I set the "first_name" to "sally"
@@ -112,4 +90,28 @@ Scenario: Deleting a customer
     When I press the "Clear" button
     And I press the "Search" button
     Then I should see the message "Success"
+    And I should not see "sally" in the results
+
+ Scenario: Update a Customer
+    When I visit the "home page"
+    And I set the "first_name" to "sally"
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "sally" in the "first_name" field
+    And I should see "ride" in the "last_name" field
+    When I change "first_name" to "toke"
+    And I change "last_name" to "abi"
+    And I press the "Update" button
+    Then I should see the message "Success"
+    When I copy the "Id" field
+    And I press the "Clear" button
+    And I paste the "Id" field
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "toke" in the "first_name" field
+    And I should see "abi" in the "last_name" field
+    When I press the "Clear" button
+    And I press the "Search" button
+    Then I should see the message "Success"
+    And I should see "toke" in the results
     And I should not see "sally" in the results
