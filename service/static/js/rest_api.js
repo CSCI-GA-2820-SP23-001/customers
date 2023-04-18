@@ -26,6 +26,7 @@ $(function () {
 
     /// Clears all form fields
     function clear_form_data() {
+        $("#customer_id").val("");
         $("#customer_first_name").val("");
         $("#customer_last_name").val("");
         $("#customer_email").val("");
