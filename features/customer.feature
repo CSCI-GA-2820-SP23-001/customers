@@ -22,7 +22,7 @@ Scenario: Create a Customer
      And I set the "First Name" to "abraham"
      And I set the "Last Name" to "abrahamson"
      And I set the "Email" to "aabrahamson@dishonest.com"
-     And I set the "Password" to "th3honest1" 
+     And I set the "Password" to "th3honest1"
      And I select "Active" in the "Status" dropdown
      And I press the "Create" button
      Then I should see the message "Success"
@@ -32,12 +32,12 @@ Scenario: Create a Customer
      And the "Last name" field should be empty
      And the "Email" field should be empty
      When I paste the "First Name" field
-     And I press the "Retrieve" button
+     And I press the "Search" button
      Then I should see the message "Success"
-     And I should see "abrahamson" in the "Last Name" field
-     And I should see "aabrahamson@honest.com" in the "Email" field
-     And I should see "th3honest1" in the "Password" field
-     And I should see "Active" in the "Status" dropdown
+     And I should see "abrahamson" in the results
+     And I should see "aabrahamson@dishonest.com" in the results
+     And I should see "th3honest1" in the results
+     And I should see "ACTIVE" in the results
 
 # Scenario: List all pets
 #     When I visit the "Home Page"
