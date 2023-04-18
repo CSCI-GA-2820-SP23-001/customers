@@ -1,7 +1,6 @@
 $(function () {
 
-
-
+    
     // *********************
     //  C O N S T A N T S
     // *********************
@@ -9,19 +8,17 @@ $(function () {
         ACTIVE: 'ACTIVE',
         SUSPENDED: 'SUSPENDED'
     };
-
     // ****************************************
     //  U T I L I T Y   F U N C T I O N S
     // ****************************************
 
     // Updates the form with data from the response
     function update_form_data(res) {
-        $("#customer_id").val(res.id);
         $("#customer_first_name").val(res.first_name);
         $("#customer_last_name").val(res.last_name);
         $("#customer_email").val(res.email);
         $("#customer_password").val(res.password);
-        $("#customer_status").val(res.status)
+        $("#customer_status").val(res.status);
     }
 
     /// Clears all form fields
@@ -31,7 +28,7 @@ $(function () {
         $("#customer_last_name").val("");
         $("#customer_email").val("");
         $("#customer_password").val("");
-        $("#customer_status").val(STATUS.ACTIVE);
+        $("#customer_status").val("STATUS.ACTIVE");
     }
 
     // Updates the flash message area
@@ -41,7 +38,7 @@ $(function () {
     }
 
     // ****************************************
-    // Create a customer
+    // Create a Customer
     // ****************************************
 
     $("#create-btn").click(function () {
@@ -61,7 +58,7 @@ $(function () {
         };
 
         $("#flash_message").empty();
-
+        
         let ajax = $.ajax({
             type: "POST",
             url: "/customers",
@@ -77,6 +74,7 @@ $(function () {
         ajax.fail(function(res){
             flash_message(res.responseJSON.message)
         });
+<<<<<<< HEAD
     });
 
 
@@ -253,3 +251,6 @@ $(function () {
     });
 
 })
+=======
+    });
+>>>>>>> 01bc5e75bc8404c4e913c9508f067966cc726a43

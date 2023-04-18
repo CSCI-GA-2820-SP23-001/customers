@@ -30,6 +30,7 @@ from compare import expect, ensure
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import Select, WebDriverWait
 from selenium.webdriver.support import expected_conditions
+import time
 
 ID_PREFIX = 'customer_'
 
@@ -76,6 +77,10 @@ def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
     element = context.driver.find_element_by_id(element_id)
     expect(element.get_attribute('value')).to_be(u'')
+
+@when("I wait for {seconds:d} seconds")
+def step_impl(context, seconds):
+    time.sleep(seconds)
 
 ##################################################################
 # These two function simulate copy and paste

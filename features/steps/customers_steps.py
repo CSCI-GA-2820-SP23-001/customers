@@ -26,11 +26,10 @@ import requests
 from behave import given
 from compare import expect
 
-
 @given('the following customers')
 def step_impl(context):
     """ Delete all Customers and load new ones """
-    # List all of the customers and delete them one by one
+    # List all of the Customers and delete them one by one
     rest_endpoint = f"{context.BASE_URL}/customers"
     context.resp = requests.get(rest_endpoint)
     expect(context.resp.status_code).to_equal(200)

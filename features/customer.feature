@@ -17,29 +17,28 @@ Scenario: The server is running
     Then I should see "Customers Admin Portal" in the title
     And I should not see "404 Not Found"
 
-# Scenario: Create a Customer
-When I visit the "Home Page"
-And I set the "first_name" to "abraham"
-And I set the "last_name" to "abrahamson"
-And I set the "email" to "aabrahamson@dishonest.com" 
-And I set the "password" to "th3honest1" 
-And I select "Active" in the "Status" dropdown
-And I press the "Create" button
-Then I should see the message "Success"
-When I copy the "first_name" field
-And I press the "Clear" button
-Then the "first_name" field should be empty
-And the "last_name" field should be empty
-And the "email" field should be empty
-And the "password" field should be empty
-When I paste the "first_name" field
-And I press the "Retrieve" button
-Then I should see the message "Success"
-And I should see "abraham" in the "first_name" field
-And I should see "abrahamson" in the "last_name" field
-And I should see "aabrahamson@honest.com" in the "email" field
-And I should see "th3honest1" in the "password" field
-And I should see "Active" in the "Status" dropdown
+Scenario: Create a Customer
+     When I visit the "home page"
+     And I set the "First Name" to "abraham"
+     And I set the "Last Name" to "abrahamson"
+     And I set the "Email" to "aabrahamson@dishonest.com"
+     And I set the "Password" to "th3honest1" 
+     And I select "Active" in the "Status" dropdown
+     And I press the "Create" button
+     And I wait for 2 seconds
+     Then I should see the message "Success"
+     When I copy the "First Name" field
+     And I press the "Clear" button
+     Then the "First Name" field should be empty
+     And the "Last name" field should be empty
+     And the "Email" field should be empty
+     When I paste the "First Name" field
+     And I press the "Retrieve" button
+     Then I should see the message "Success"
+     And I should see "abrahamson" in the "Last Name" field
+     And I should see "aabrahamson@honest.com" in the "Email" field
+     And I should see "th3honest1" in the "Password" field
+     And I should see "Active" in the "Status" dropdown
 
 # Scenario: List all pets
 #     When I visit the "Home Page"
