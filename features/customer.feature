@@ -76,7 +76,7 @@ Scenario: Deleting a customer
     Then I should see the message "Success"
     And I should see "sally" in the "first_name" field
     When I press the "Delete" button
-    Then I should see the message "customer has been Deleted!"
+    Then I should see the message "Customer has been Deleted!"
     And the "id" field should be empty
     And the "first_name" field should be empty
     And the "last_name" field should be empty
