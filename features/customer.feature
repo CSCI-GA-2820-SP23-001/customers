@@ -115,3 +115,11 @@ Scenario: Deleting a customer
     Then I should see the message "Success"
     And I should see "toke" in the results
     And I should not see "sally" in the results
+
+Scenario: Retrieve a Customer
+    When I visit the "home page"
+    And I set the "id" to "1"
+    And I press the "Retrieve" button
+    Then I should see the message "Success"
+    And I should see "abraham" in the "first_name" field
+    And I should see "abrahamson" in the "last_name" field
