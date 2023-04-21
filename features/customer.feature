@@ -118,8 +118,14 @@ Scenario: Deleting a customer
 
 Scenario: Retrieve a Customer
     When I visit the "home page"
-    And I set the "id" to "1"
+    And I press the "Search" button
+    And I copy the customer in the form
+    And I press the "Clear" button
+    Then the "id" field should be empty
+    And the "first_name" field should be empty
+    When I paste the customer "id" field
     And I press the "Retrieve" button
     Then I should see the message "Success"
-    And I should see "abraham" in the "first_name" field
-    And I should see "abrahamson" in the "last_name" field
+    And the "first_name" should equal the copied customer
+    And the "last_name" should equal the copied customer
+    And the "email" should equal the copied customer
