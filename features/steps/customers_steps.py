@@ -15,6 +15,7 @@
 ######################################################################
 
 # pylint: disable=function-redefined, missing-function-docstring
+# flake8: noqa
 """
 Customer Steps
 
@@ -32,6 +33,7 @@ from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions
 
 ID_PREFIX = 'customer_'
+
 
 @given('the following customers')
 def step_impl(context):
@@ -56,6 +58,7 @@ def step_impl(context):
         context.resp = requests.post(rest_endpoint, json=payload)
         expect(context.resp.status_code).to_equal(201)
 
+
 @when('I copy the customer in the form')
 def step_impl(context):
     """Copy the entire customer object in the form component"""
@@ -78,6 +81,7 @@ def step_impl(context):
     context.clipboard = customer
     logging.info('Clipboard contains: %s', context.clipboard)
 
+
 @when('I paste the customer "{element_name}" field')
 def step_impl(context, element_name):
     """Pastes the field element_name field into the corresponding form component"""
@@ -92,6 +96,7 @@ def step_impl(context, element_name):
 
     element.clear()
     element.send_keys(value)
+
 
 @then('the "{element_name}" should equal the copied customer')
 def step_impl(context, element_name):
