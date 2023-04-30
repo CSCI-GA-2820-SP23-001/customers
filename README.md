@@ -1,4 +1,4 @@
-# NYU DevOps Project Template
+# NYU DevOps Customers Project
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
 [![Python](https://img.shields.io/badge/Language-Python-blue.svg)](https://python.org/)
@@ -7,7 +7,7 @@
 
 ## Overview
 
-This project template contains starter code for your class project. The `/service` folder contains your `models.py` file for your model and a `routes.py` file for your service. The `/tests` folder has test case starter code for testing the model and the service separately. All you need to do is add your functionality. You can use the [lab-flask-tdd](https://github.com/nyu-devops/lab-flask-tdd) for code examples to copy from.
+This is the Customers API application. The `/service` folder contains the application models in the `models.py` file and the service routes in the `routes.py` file. The `/tests` folder has test case starter code for testing the model and the service separately.
 
 ## Automatic Setup
 
