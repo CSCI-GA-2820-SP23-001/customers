@@ -17,7 +17,7 @@ The best way to use this repo is to start your own repo using it as a git templa
 
 You can also clone this repository and then copy and paste the starter code into your project repo folder on your local computer. Be careful not to copy over your own `README.md` file so be selective in what you copy.
 
-There are 4 hidden files that you will need to copy manually if you use the Mac Finder or Windows Explorer to copy files from this folder into your repo folder.
+There are 4 hidden files that you will need to copy manually if you use the system file explorer to copy files from this folder into your repo folder.
 
 These should be copied using a bash shell as follows:
 
