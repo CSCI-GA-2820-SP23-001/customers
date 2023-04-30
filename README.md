@@ -7,7 +7,7 @@
 
 ## Overview
 
-This is the Customers API application. The `/service` folder contains the application models in the `models.py` file and the service routes in the `routes.py` file. The `/tests` folder has test case starter code for testing the model and the service separately.
+This is the Customers flask API application. The `/service` folder contains the application models in the `models.py` file and the service routes in the `routes.py` file. The `/tests` folder has test case starter code for testing the model and the service separately.
 
 ## Automatic Setup
 
