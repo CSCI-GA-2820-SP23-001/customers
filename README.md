@@ -9,13 +9,9 @@
 
 This is the Customers flask API application. The `/service` folder contains the application models in the `models.py` file and the service routes in the `routes.py` file. The `/tests` folder has test case starter code for testing the model and the service separately.
 
-## Automatic Setup
-
-The best way to use this repo is to start your own repo using it as a git template. To do this just press the green **Use this template** button in GitHub and this will become the source for your repository.
-
 ## Manual Setup
 
-You can also clone this repository and then copy and paste the starter code into your project repo folder on your local computer. Be careful not to copy over your own `README.md` file so be selective in what you copy.
+You can clone this repository and then copy and paste as starter code into your project repo folder on your local computer. Be careful not to copy over your own `README.md` file so be selective in what you copy.
 
 There are 4 hidden files that you will need to copy manually if you use the system file explorer to copy files from this folder into your repo folder.
 
