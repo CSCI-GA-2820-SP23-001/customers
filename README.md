@@ -7,7 +7,7 @@
 
 ## Overview
 
-This is the Customers API application. The `/service` folder contains your `models.py` file for your model and a `routes.py` file for your service. The `/tests` folder has test case starter code for testing the model and the service separately. All you need to do is add your functionality. You can use the [lab-flask-tdd](https://github.com/nyu-devops/lab-flask-tdd) for code examples to copy from.
+This is the Customers API application. The `/service` folder contains the application models in the `models.py` file and the service routes in the `routes.py` file. The `/tests` folder has test case starter code for testing the model and the service separately.
 
 ## Automatic Setup
 
