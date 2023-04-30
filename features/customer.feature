@@ -39,23 +39,6 @@ Scenario: Create a Customer
      And I should see "th3honest1" in the results
      And I should see "ACTIVE" in the results
 
-# Scenario: List all pets
-#     When I visit the "Home Page"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the results
-#     And I should see "kitty" in the results
-#     And I should not see "leo" in the results
-
-# Scenario: Search for dogs
-#     When I visit the "Home Page"
-#     And I set the "Category" to "dog"
-#     And I press the "Search" button
-#     Then I should see the message "Success"
-#     And I should see "fido" in the results
-#     And I should not see "kitty" in the results
-#     And I should not see "leo" in the results
-
 Scenario: Search for john
     When I visit the "home page"
     And I set the "first_name" to "john"
