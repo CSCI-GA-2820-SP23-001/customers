@@ -77,9 +77,13 @@ def step_impl(context, element_name):
     element = context.driver.find_element_by_id(element_id)
     expect(element.get_attribute('value')).to_be(u'')
 
-@when('the "{element_name}" field should not be empty')
+@when('the "{element_name}" field is not empty')
 def step_impl(context, element_name):
     element_id = ID_PREFIX + element_name.lower().replace(' ', '_')
+
+    element = WebDriverWait(context.driver, context.WAIT_SECONDS).until(
+        lambda driver: driver.find_element_by_id(element_id).get_attribute('value').strip() != ''
+    )
     element = context.driver.find_element_by_id(element_id)
     expect(element.get_attribute('value')).to_be_truthy()
 

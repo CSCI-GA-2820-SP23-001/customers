@@ -102,7 +102,7 @@ Scenario: Deleting a customer
 Scenario: Retrieve a Customer
     When I visit the "home page"
     And I press the "Search" button
-    When the "id" field should not be empty
+    When the "id" field is not empty
     And I copy the customer in the form
     And I press the "Clear" button
     Then the "id" field should be empty
