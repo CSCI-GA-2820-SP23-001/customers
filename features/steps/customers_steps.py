@@ -78,7 +78,7 @@ def step_impl(context):
         element = context.driver.find_element(By.ID, el_id)
         customer[el_key] = element.get_attribute('value')
 
-    context.clipboard = str(customer)
+    context.clipboard = customer
     logging.info('Clipboard contains: %s', context.clipboard)
 
 
@@ -93,8 +93,7 @@ def step_impl(context, element_name):
         expected_conditions.presence_of_element_located((By.ID, element_id))
     )
 
-    customer = eval(context.clipboard)
-    value = customer.get(element_key, '')
+    value = context.clipboard.get(element_key, '')
 
     element.clear()
     element.send_keys(value)

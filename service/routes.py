@@ -154,6 +154,8 @@ def update_customer(customer_id):
 
     customer.id = customer_id
 
+    customer.update()
+
     app.logger.info(f'Customer with id {customer_id} updated')
     return (
         jsonify(customer.serialize()),
